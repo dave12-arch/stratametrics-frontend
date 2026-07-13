@@ -12,6 +12,9 @@ interface MarketCoin {
   market_cap: number;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://stratometrics-backend-bmkt.vercel.app';
+const MARKET_DATA_URL = `${API_BASE_URL.replace(/\/$/, '')}/api/market/data`;
+
 export const useMarketData = () => {
   const [data, setData] = useState<MarketCoin[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +34,7 @@ export const useMarketData = () => {
       setLoading(true);
 
       try {
-        const response = await axios.get('http://localhost:3000/api/market/data', {
+        const response = await axios.get(MARKET_DATA_URL, {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
           },
