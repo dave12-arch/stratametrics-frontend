@@ -25,7 +25,7 @@ export const AuthForm = () => {
     if (!isSignIn && formData.password !== formData.confirm) return alert("Passwords don't match");
 
     if (isSignIn) {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
@@ -33,11 +33,15 @@ export const AuthForm = () => {
         alert(error.message);
         return;
       }
-      navigate('/dashboard');
+      if (data.session) {
+        navigate('/dashboard');
+      } else {
+        alert('Sign-in succeeded but the session is not ready yet. Please wait a moment and try again.');
+      }
       return;
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: { data: { full_name: formData.name, phone: formData.phone } },
@@ -46,7 +50,11 @@ export const AuthForm = () => {
       alert(error.message);
       return;
     }
-    navigate('/dashboard');
+    if (data.session) {
+      navigate('/dashboard');
+    } else {
+      alert('Account created. Please check your inbox to confirm your email, then sign in again.');
+    }
   };
 
   return (
