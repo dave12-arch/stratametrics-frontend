@@ -38,6 +38,7 @@ export const useMarketData = () => {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
           },
+          timeout: 8000,
         });
 
         const payload = response.data?.data ?? response.data;
